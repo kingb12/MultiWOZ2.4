@@ -7,7 +7,7 @@ from datasets import DatasetDict, load_dataset
 import os
 
 
-def clean_dialogue(dialogue: Dict[str, Any]) -> Dict[str, Any]:
+def repair_system_acts(dialogue: Dict[str, Any]) -> Dict[str, Any]:
     """
     Prepare the dialogues for upload to hugging face. This means normalizing the data to a consistent structure format
     (currently, only issues were with system_acts, which I don't use)
@@ -25,7 +25,7 @@ if __name__ == '__main__':
             raise FileNotFoundError("dataset files not prepared properly. See README (run create_data.py)")
         with open(f'data/mwz2.4/{split}_dials.json', 'r') as f:
             dialogues: List[Dict[str, Any]] = json.load(f)
-        dialogues = [clean_dialogue(d) for d in dialogues]
+        dialogues = [repair_system_acts(d) for d in dialogues]
         os.makedirs('data/jsonl/mwz2.4/', exist_ok=True)
         with jsonlines.open(f'data/jsonl/mwz2.4/{split}_dials.jsonl', mode='w') as writer:
             writer.write_all(dialogues)
